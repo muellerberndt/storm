@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  storm:
+    build: .
+    image: storm
+    command: eth http://host.docker.internal:8545 --duration 30
+    # Use host.docker.internal to access services running on the host machine
+    # Adjust the URL and parameters as needed 

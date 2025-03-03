@@ -1,0 +1,4 @@
+aiohttp>=3.8.0
+asyncio>=3.4.3
+colorama>=0.4.4
+tqdm>=4.62.0
