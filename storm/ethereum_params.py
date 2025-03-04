@@ -14,27 +14,57 @@ class ParameterGenerator:
     def __init__(self):
         # Sample addresses, block hashes, and transaction hashes for fuzzing
         self.sample_addresses = [
+            # Standard addresses
             "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
             "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",  # vitalik.eth
             "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",  # WETH
             "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",  # USDC
             "0x0000000000000000000000000000000000000000",  # Zero address
+            
+            # Edge cases
+            "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",  # Max address
+            "0x000000000000000000000000000000000000dEaD",  # Dead address
+            "0x1",  # Too short
+            "0x" + "f" * 40,  # All Fs
+            "0x" + "0" * 40,  # All 0s
+            "0x" + "a" * 39 + "g",  # Invalid hex character
+            "0x" + "a" * 100,  # Too long
+            "0xéàçñ",  # Non-ASCII characters
+            "0xabcdefABCDEF1234567890abcdefABCDEF12345678",  # Non-checksummed
         ]
         
         self.sample_block_hashes = [
+            # Standard block hashes
             "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3",  # Genesis block
             "0x88e96d4537bea4d9c05d12549907b32561d3bf31f45aae734cdc119f13406cb6",
             "0xb495a1d7e6663152ae92708da4843337b958146015a2802f4193a410044698c9",
             "0x0000000000000000000000000000000000000000000000000000000000000000",  # Invalid hash
+            
+            # Edge cases
+            "0x" + "f" * 64,  # All Fs
+            "0x" + "0" * 64,  # All 0s
+            "0x1",  # Too short
+            "0x" + "a" * 63 + "g",  # Invalid hex character
+            "0x" + "a" * 128,  # Too long
         ]
         
         self.sample_tx_hashes = [
+            # Standard transaction hashes
             "0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060",
             "0x2cc6c94c21685b7e0f8ddabf277a5ccf98db157c62619cde8baea696a74ed18e",
             "0x0000000000000000000000000000000000000000000000000000000000000000",  # Invalid hash
+            
+            # Edge cases
+            "0x" + "f" * 64,  # All Fs
+            "0x" + "0" * 64,  # All 0s
+            "0x1",  # Too short
+            "0x" + "a" * 63 + "g",  # Invalid hex character
+            "0x" + "a" * 128,  # Too long
+            "",  # Empty string
         ]
         
         self.sample_block_numbers = [
+            # Standard block specifiers
             "0x0",  # Genesis block
             "0x1",  # Block 1
             "0xa",  # Block 10
@@ -45,17 +75,107 @@ class ParameterGenerator:
             "earliest",
             "safe",
             "finalized",
+            
+            # Edge cases
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  # Max uint256
+            "-0x1",  # Negative (invalid)
+            "-1",  # Negative decimal (invalid)
+            "0",  # Decimal 0
+            "1",  # Decimal 1
+            "18446744073709551615",  # Max uint64 as decimal
+            "18446744073709551616",  # Max uint64+1 as decimal
+            "0x" + "f" * 100,  # Too long hex
+            "9" * 78,  # Very large decimal (more than 2^256)
+            "0x0000000000000000000000000000000000000000000000000000000000000000",  # Padded 0
+            "unknown",  # Invalid string
+            "LATEST",  # Case variation
+            "0x" + "g",  # Invalid hex character
+            "",  # Empty string
         ]
         
         self.sample_filter_ids = [
+            # Standard filter IDs
             "0x1",
             "0x2",
             "0x3",
             "0x0",
             "0x10",
             "0x100",
-            "0xffffffffffffffff",
-            "0x0000000000000000",
+            
+            # Edge cases
+            "0xffffffffffffffff",  # Max filter ID
+            "0x0000000000000000",  # Padded 0
+            "0x" + "f" * 32,  # Very long
+            "0x" + "0" * 32,  # Very long zeros
+            "-0x1",  # Negative (invalid)
+            "1",  # Decimal
+            "0",  # Zero decimal
+            "0xg",  # Invalid hex
+            "",  # Empty string
+        ]
+        
+        # Add sample gas prices with edge cases
+        self.sample_gas_prices = [
+            "0x1",  # Minimal
+            "0x3b9aca00",  # 1 Gwei
+            "0x3b9aca00",  # 1 Gwei
+            "0x174876e800",  # 100 Gwei
+            "0x9184e72a000",  # 10,000 Gwei
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  # Max uint256
+            "0x0",  # Zero
+            "0x" + "f" * 100,  # Too long
+        ]
+        
+        # Add sample gas limits with edge cases
+        self.sample_gas_limits = [
+            "0x5208",  # 21000 (minimum for transfers)
+            "0x15f90",  # 90000
+            "0x186a0",  # 100000
+            "0x989680",  # 10000000
+            "0x1dcd6500",  # 500000000
+            "0xffffffff",  # 2^32 - 1
+            "0xffffffffffffffff",  # 2^64 - 1
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  # 2^256 - 1
+            "0x1",  # 1 (too low)
+            "0x0",  # 0 (invalid)
+        ]
+        
+        # Add sample values with edge cases
+        self.sample_values = [
+            "0x0",  # 0 ETH
+            "0x1",  # 1 wei
+            "0x56bc75e2d63100000",  # 100 ETH
+            "0xde0b6b3a7640000",  # 1 ETH
+            "0x6f05b59d3b20000",  # 0.5 ETH
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  # Max uint256
+            "0x" + "f" * 100,  # Too long
+        ]
+        
+        # Add sample indices with edge cases
+        self.sample_indices = [
+            "0x0",  # First index
+            "0x1",  # Second index
+            "0xa",  # 10th index
+            "0x100",  # 256th index
+            "0xffffffff",  # 2^32 - 1
+            "0xffffffffffffffff",  # 2^64 - 1
+            "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",  # 2^256 - 1
+            "-0x1",  # Negative (invalid)
+            "0",  # Decimal 0
+            "1000000",  # Large decimal
+        ]
+        
+        # Sample CIDs for data params
+        self.sample_data = [
+            "0x",  # Empty data
+            "0x00",  # Single byte
+            "0x01",  # Single byte
+            "0xabcd",  # Short data
+            "0x" + "0123456789abcdef" * 10,  # Medium data (~160 bytes)
+            "0x" + "deadbeef" * 100,  # Large data (~800 bytes)
+            "0x" + "ff" * 1024,  # Very large data (1KB)
+            "0x" + "00" * 1024,  # 1KB of zeros
+            "0x" + "ff" * 10000,  # Extremely large data (10KB)
         ]
     
     def get_available_methods(self) -> Dict[str, Callable[[], List[Any]]]:
@@ -114,10 +234,14 @@ class ParameterGenerator:
     
     def _generate_web3_sha3_params(self) -> List[Any]:
         """Generate parameters for web3_sha3"""
-        # Generate random hex data
-        data_length = random.randint(2, 100)  # Length in bytes
-        random_data = "0x" + "".join(random.choice("0123456789abcdef") for _ in range(data_length * 2))
-        return [random_data]
+        # Generate random hex data with possibility of edge cases
+        if random.random() < 0.3:  # 30% chance of using predefined edge case
+            return [random.choice(self.sample_data)]
+        else:
+            # Generate random data
+            data_length = random.randint(2, 100)  # Length in bytes
+            random_data = "0x" + "".join(random.choice("0123456789abcdef") for _ in range(data_length * 2))
+            return [random_data]
     
     def _generate_eth_getBalance_params(self) -> List[Any]:
         """Generate parameters for eth_getBalance"""
@@ -195,19 +319,27 @@ class ParameterGenerator:
         to_address = random.choice(self.sample_addresses)
         from_address = random.choice(self.sample_addresses)
         
-        if random.random() < 0.5:
-            data_length = random.randint(2, 100)
-            data = "0x" + "".join(random.choice("0123456789abcdef") for _ in range(data_length * 2))
-            tx_object = {"to": to_address, "from": from_address, "data": data}
-        else:
-            tx_object = {"to": to_address, "from": from_address}
+        # Generate a transaction object with higher probability of edge cases
+        tx_object = {"to": to_address, "from": from_address}
         
-        if random.random() < 0.3:
-            tx_object["gas"] = "0x" + hex(random.randint(21000, 1000000))[2:]
-        if random.random() < 0.3:
-            tx_object["gasPrice"] = "0x" + hex(random.randint(1, 100) * 10**9)[2:]
-        if random.random() < 0.3:
-            tx_object["value"] = "0x" + hex(random.randint(0, 10) * 10**18)[2:]
+        # Sometimes include data with higher chance of edge cases
+        if random.random() < 0.7:  # 70% chance to include data
+            if random.random() < 0.4:  # 40% chance to use edge case data
+                tx_object["data"] = random.choice(self.sample_data) 
+            else:
+                data_length = random.randint(2, 100)
+                data = "0x" + "".join(random.choice("0123456789abcdef") for _ in range(data_length * 2))
+                tx_object["data"] = data
+        
+        # Include gas, gasPrice, value with higher probability and edge cases
+        if random.random() < 0.5:  # 50% chance to include gas
+            tx_object["gas"] = random.choice(self.sample_gas_limits)
+            
+        if random.random() < 0.5:  # 50% chance to include gasPrice
+            tx_object["gasPrice"] = random.choice(self.sample_gas_prices)
+            
+        if random.random() < 0.5:  # 50% chance to include value
+            tx_object["value"] = random.choice(self.sample_values)
         
         return [tx_object]
     
