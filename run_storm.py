@@ -12,16 +12,16 @@ from colorama import Fore, Style
 colorama.init()
 
 # Print a nice banner
-print(f"""
+print(rf"""
 {Fore.CYAN}╔═══════════════════════════════════════════════════════════╗
-║ {Fore.YELLOW}  _____ _______ ____  _____  __  __ {Fore.CYAN}                    ║
-║ {Fore.YELLOW} / ____|__   __/ __ \|  __ \|  \/  |{Fore.CYAN}                    ║
-║ {Fore.YELLOW}| (___    | | | |  | | |__) | \  / |{Fore.CYAN}                    ║
-║ {Fore.YELLOW} \___ \   | | | |  | |  _  /| |\/| |{Fore.CYAN}                    ║
-║ {Fore.YELLOW} ____) |  | | | |__| | | \ \| |  | |{Fore.CYAN}                    ║
-║ {Fore.YELLOW}|_____/   |_|  \____/|_|  \_\_|  |_|{Fore.CYAN}                    ║
-║                                                   ║
-║ {Fore.GREEN}RPC Flood Testing Tool{Fore.CYAN}                              ║
+║ {Fore.YELLOW}  _____ _______ ____  _____  __  __ {Fore.CYAN}                      ║
+║ {Fore.YELLOW} / ____|__   __/ __ \|  __ \|  \/  |{Fore.CYAN}                      ║
+║ {Fore.YELLOW}| (___    | | | |  | | |__) | \  / |{Fore.CYAN}                      ║
+║ {Fore.YELLOW} \___ \   | | | |  | |  _  /| |\/| |{Fore.CYAN}                      ║
+║ {Fore.YELLOW} ____) |  | | | |__| | | \ \| |  | |{Fore.CYAN}                      ║
+║ {Fore.YELLOW}|_____/   |_|  \____/|_|  \_\_|  |_|{Fore.CYAN}                      ║
+║                                                           ║
+║ {Fore.GREEN}RPC Flood Testing Tool{Fore.CYAN}                                    ║
 ╚═══════════════════════════════════════════════════════════╝{Style.RESET_ALL}
 """)
 
